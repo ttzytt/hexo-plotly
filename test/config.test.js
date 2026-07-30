@@ -37,6 +37,28 @@ test('getConfig accepts an arbitrary namespaced asset directory', () => {
   assert.equal(config.urls.stylesheet, '/vendor/charts/hexo-plotly.css');
 });
 
+test('custom stylesheet URLs are optional and subdirectory-safe', () => {
+  const hexo = createHexo('/notes/');
+  hexo.config.plotly.custom_stylesheet = '/css/plotly-overrides.css';
+  let config = getConfig(hexo);
+
+  assert.equal(
+    config.urls.customStylesheet,
+    '/notes/css/plotly-overrides.css'
+  );
+
+  hexo.config.plotly.custom_stylesheet =
+    'https://cdn.example.com/plotly-overrides.css';
+  config = getConfig(hexo);
+  assert.equal(
+    config.urls.customStylesheet,
+    'https://cdn.example.com/plotly-overrides.css'
+  );
+
+  delete hexo.config.plotly.custom_stylesheet;
+  assert.equal(getConfig(hexo).urls.customStylesheet, null);
+});
+
 test('normalizeAssetDir rejects traversal and empty directories', () => {
   assert.throws(() => normalizeAssetDir('../assets'), /Invalid plotly\.asset_dir/u);
   assert.throws(() => normalizeAssetDir('./assets'), /Invalid plotly\.asset_dir/u);

@@ -49,6 +49,7 @@ test('loader emits escaped, subdirectory-safe boot options', () => {
     routes: { localeDir: 'assets/locales' },
     urls: {
       stylesheet: '/en/assets/styles.css',
+      customStylesheet: '/en/css/plotly-overrides.css',
       runtime: '/en/assets/runtime.js',
       plotlyCdn: 'https://example.com/plotly.js',
       plotlyLocal: '/en/assets/plotly.js',
@@ -60,9 +61,33 @@ test('loader emits escaped, subdirectory-safe boot options', () => {
     timeoutMs: 1234
   };
   const i18n = { plotlyLocale: () => 'zh-cn' };
-  const html = loaderHtml(hexo, config, i18n, {}, true);
+  const html = loaderHtml(
+    hexo,
+    config,
+    i18n,
+    { plotly_custom_stylesheet: '/css/article-plotly.css' },
+    true
+  );
 
   assert.match(html, /data-hexo-plotly-loader/u);
+  assert.match(
+    html,
+    /href="\/en\/css\/plotly-overrides\.css" data-hexo-plotly-custom-styles/u
+  );
+  assert.equal(
+    html.indexOf('data-hexo-plotly-styles') <
+      html.indexOf('data-hexo-plotly-custom-styles'),
+    true
+  );
+  assert.match(
+    html,
+    /href="\/en\/css\/article-plotly\.css" data-hexo-plotly-page-styles/u
+  );
+  assert.equal(
+    html.indexOf('data-hexo-plotly-custom-styles') <
+      html.indexOf('data-hexo-plotly-page-styles'),
+    true
+  );
   assert.equal(
     html.includes('"localeLocalUrl":"/en/assets/locales/zh-cn.js"'),
     true
@@ -70,6 +95,22 @@ test('loader emits escaped, subdirectory-safe boot options', () => {
   assert.match(html, /"locale":"zh-CN"/u);
   assert.match(html, /"mathJaxEnabled":true/u);
   assert.match(html, /"timeoutMs":1234/u);
+
+  const deduplicatedHtml = loaderHtml(
+    hexo,
+    config,
+    i18n,
+    { plotly_custom_stylesheet: '/css/plotly-overrides.css' },
+    true
+  );
+  assert.equal(
+    (deduplicatedHtml.match(/data-hexo-plotly-custom-styles/gu) || []).length,
+    1
+  );
+  assert.doesNotMatch(
+    deduplicatedHtml,
+    /data-hexo-plotly-page-styles/u
+  );
 });
 
 test('tag options reject unknown, duplicate, and invalid language values', () => {

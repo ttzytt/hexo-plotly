@@ -1,3 +1,5 @@
+[简体中文](README.zh-CN.md) | English
+
 # hexo-plotly
 
 A theme-neutral Hexo tag plugin for article-specific Plotly charts. It provides:
@@ -27,8 +29,13 @@ Enable Plotly in an article:
 ---
 plotly: true
 plotly_mathjax: true # only if the chart or its controls use TeX
+plotly_custom_stylesheet: /css/article-plotly.css # optional, this page only
 ---
 ```
+
+`plotly_custom_stylesheet` is processed by Hexo's `url_for` and is loaded only
+on that page. It is inserted after both the plugin's default stylesheet and the
+site-wide `plotly.custom_stylesheet`, so its rules take final precedence.
 
 Embed a trusted repository-relative JavaScript file:
 
@@ -132,6 +139,7 @@ plotly:
   locale_cdn_template: https://cdn.plot.ly/plotly-locale-{locale}-latest.js
   runtime_url:
   stylesheet_url:
+  custom_stylesheet: /css/plotly-overrides.css
   timeout_ms: 10000
   watch: true
   require_front_matter: true
@@ -152,15 +160,31 @@ by the plugin. Set a URL field to `false` to disable that source. Plotly uses:
 MathJax and locale bundles use CDN then local fallback. `asset_dir` is a Hexo
 route namespace and works with a non-root `root`, such as `/en/`.
 
+`stylesheet_url` replaces the URL of the plugin's default stylesheet.
+`custom_stylesheet` instead adds another stylesheet after the default one and
+is the recommended option for color and theme overrides. Local paths are
+processed by Hexo's `url_for`, so `/css/plotly-overrides.css` also works when
+the site is deployed below a path such as `/notes/`. Full external URLs are
+supported. Omit the field or set it to `false` to disable the extra stylesheet.
+
 `stop_input_propagation` exists for themes that attach page effects to bubbling
 range-input events; most themes should leave it disabled.
 
 ## Theme integration
 
+The default stylesheet is maintained in
+[`assets/hexo-plotly.css`](assets/hexo-plotly.css). In an installed package it
+is located at `node_modules/hexo-plotly/assets/hexo-plotly.css`. Hexo exposes it
+at `<root>/<asset_dir>/hexo-plotly.css`, which is
+`/assets/hexo-plotly/hexo-plotly.css` with the default configuration.
+
 The plugin does not import or modify a Hexo theme. Its CSS reacts to common
 `data-theme`, `data-color-mode`, `data-scheme`, `.dark`, and `.light` signals,
 plus `prefers-color-scheme`. A theme can provide an exact visual match by
-overriding these variables:
+overriding CSS variables instead of copying the complete default stylesheet.
+
+For example, create `source/css/plotly-overrides.css`, configure
+`custom_stylesheet`, and put the overrides in that file:
 
 ```css
 :root {
@@ -169,12 +193,40 @@ overriding these variables:
   --hexo-plotly-primary: #1f77b4;
   --hexo-plotly-warning: #d48806;
   --hexo-plotly-accent: #6f42c1;
-  --hexo-plotly-control-bg: rgba(255, 255, 255, 0.82);
+  --hexo-plotly-control-bg: rgba(255, 255, 255, 0.45);
   --hexo-plotly-control-border: rgba(0, 0, 0, 0.16);
+}
+
+:root[data-theme='dark'] {
+  --hexo-plotly-text: #d8d8d8;
+  --hexo-plotly-grid: rgba(255, 255, 255, 0.14);
+  --hexo-plotly-primary: #49b1f5;
+  --hexo-plotly-warning: #f6c344;
+  --hexo-plotly-accent: #9b8afb;
+  --hexo-plotly-control-bg: rgba(255, 255, 255, 0.04);
+  --hexo-plotly-control-border: rgba(255, 255, 255, 0.18);
 }
 ```
 
-No Font Awesome, Butterfly helper, or theme i18n registry is required.
+The plugin injects the custom stylesheet after its default stylesheet. Chart
+code that gets colors through `HexoPlotly.getColors()` will therefore use the
+overridden values. Call `HexoPlotly.observeTheme()` when a chart should redraw
+after a live light/dark theme switch.
+
+For an individual article, add a second file such as
+`source/css/article-plotly.css` and select it in Front Matter:
+
+```yaml
+plotly: true
+plotly_custom_stylesheet: /css/article-plotly.css
+```
+
+The resulting order is default plugin CSS, site-wide custom CSS, then
+page-specific CSS. If the page and site-wide URLs are identical, the plugin
+loads the file only once.
+
+No theme-specific Hexo helpers, Font Awesome icons, or theme-specific i18n
+registries are required.
 
 ## Live preview
 
