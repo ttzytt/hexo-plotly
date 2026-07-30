@@ -1,6 +1,6 @@
 {
   "name": "hexo-plotly",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Theme-neutral Plotly tag plugin with per-page loading, MathJax, i18n, and live preview support for Hexo",
   "author": "ttzytt",
   "license": "MIT",
