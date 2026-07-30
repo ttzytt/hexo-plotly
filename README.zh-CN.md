@@ -95,6 +95,13 @@ HexoPlotly.observeTheme(render, target);
 图表代码会被内联到文章页面中，必须是可信代码。不要嵌入未经审查的第三方
 JavaScript。
 
+## 示例与演示
+
+目前还没有专门用于展示 Demo 的网站。我正在自己的博客中使用这个插件，可以
+通过下面这篇文章查看交互式图表和控件的实际效果：
+
+- [PWM 电磁铁文章](https://ttzytt.com/2026/07/pwm-electromagnet/)
+
 ## 图表多语言
 
 把 YAML 翻译文件放在图表代码旁边：

@@ -96,6 +96,14 @@ HexoPlotly.observeTheme(render, target);
 Chart code is inlined into the article and must be trusted. Do not embed
 unreviewed third-party JavaScript.
 
+## Examples and demo
+
+There is no dedicated demo website yet. I currently use this plugin on my own
+blog, and the following article provides a practical reference for its
+interactive charts and controls:
+
+- [PWM electromagnet article](https://ttzytt.com/en/2026/07/pwm-electromagnet/)
+
 ## Chart localization
 
 Place a YAML file beside the chart code:
