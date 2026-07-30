@@ -2,6 +2,16 @@
   "name": "hexo-plotly",
   "version": "0.1.0",
   "description": "Theme-neutral Plotly tag plugin with per-page loading, MathJax, i18n, and live preview support for Hexo",
+  "author": "ttzytt",
+  "license": "MIT",
+  "homepage": "https://github.com/ttzytt/hexo-plotly#readme",
+  "bugs": {
+    "url": "https://github.com/ttzytt/hexo-plotly/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ttzytt/hexo-plotly.git"
+  },
   "main": "index.js",
   "files": [
     "assets",
@@ -14,7 +24,8 @@
   ],
   "scripts": {
     "test": "node --test",
-    "check": "node --check index.js && node --check lib/register.js && node --check assets/hexo-plotly.js"
+    "check": "node --check index.js && node --check lib/register.js && node --check assets/hexo-plotly.js",
+    "prepublishOnly": "npm run check && npm test"
   },
   "keywords": [
     "hexo",
@@ -22,9 +33,15 @@
     "chart",
     "visualization",
     "tag",
-    "i18n"
+    "i18n",
+    "localization",
+    "mathjax",
+    "dark-mode"
   ],
-  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "engines": {
     "node": ">=20.19.0"
   },
