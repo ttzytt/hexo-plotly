@@ -13,6 +13,7 @@
     "url": "git+https://github.com/ttzytt/hexo-plotly.git"
   },
   "main": "index.js",
+  "packageManager": "npm@11.18.0",
   "files": [
     "assets",
     "lib",
