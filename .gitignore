@@ -1,0 +1,9 @@
+node_modules/
+
+# Test and coverage output
+coverage/
+.nyc_output/
+
+# npm-generated archives and logs
+*.tgz
+npm-debug.log*
